@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloups-deployment
+  labels:
+    app: cloups-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cloups-deployment
+  template:
+    metadata:
+      labels:
+        app: cloups-deployment
+    spec:
+      containers:
+      - name: cloudops-container
+        image: <DOCKER-HUB>/REPO
+        ports:
+        - containerPort: 8000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudops-service
+  labels:
+    app: cloups-deployment
+spec:
+  type: LoadBalancer
+  selector:
+    app: cloups-deployment # Matches pods with label app: my-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80         
+      targetPort: 8000
